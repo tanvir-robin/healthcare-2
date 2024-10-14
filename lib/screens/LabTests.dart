@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 class LabTests extends StatefulWidget {
   final String userId;
 
-  LabTests({required this.userId});
+  const LabTests({super.key, required this.userId});
 
   @override
   _LabTestsState createState() => _LabTestsState();
@@ -24,8 +24,8 @@ class _LabTestsState extends State<LabTests> {
   late double height;
   String dropdownValue = 'Update';
 
-  TextEditingController _detailsController = TextEditingController();
-  GlobalKey<FormState> _formKey = GlobalKey();
+  final TextEditingController _detailsController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey();
 
   @override
   void initState() {
@@ -152,20 +152,20 @@ class _LabTestsState extends State<LabTests> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: AppBar(
         backgroundColor: primaryColor,
-        title: Text('Lab Tests'),
+        title: const Text('Lab Tests'),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        label: Text('New Lab Test'),
+        label: const Text('New Lab Test'),
         onPressed: () {
           _addNewLabTestDialog(context);
         },
-        icon: Icon(Icons.home),
+        icon: const Icon(Icons.home),
       ),
       body: _loading
-          ? Center(child: CircularProgressIndicator())
-          : Container(
+          ? const Center(child: CircularProgressIndicator())
+          : SizedBox(
               height: height,
-              child: _labTests.length > 0
+              child: _labTests.isNotEmpty
                   ? SingleChildScrollView(
                       child: RefreshIndicator(
                         onRefresh: () async {
@@ -194,7 +194,7 @@ class _LabTestsState extends State<LabTests> {
                                           color: Colors.grey.withOpacity(0.5),
                                           spreadRadius: 5,
                                           blurRadius: 7,
-                                          offset: Offset(0, 3)),
+                                          offset: const Offset(0, 3)),
                                     ],
                                   ),
                                   child: Column(
@@ -214,7 +214,7 @@ class _LabTestsState extends State<LabTests> {
                                                     text: _labTests[index]
                                                             ['test_id']
                                                         .toString(),
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                         fontWeight:
                                                             FontWeight.w500),
                                                   ),
@@ -242,17 +242,17 @@ class _LabTestsState extends State<LabTests> {
                                                                 100]),
                                             child: Text(
                                               _labTests[index]['test_status'],
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   color: colorWhite,
                                                   fontWeight: FontWeight.w500),
                                             ),
                                           )
                                         ],
                                       ),
-                                      SizedBox(height: 5),
+                                      const SizedBox(height: 5),
                                       Row(
                                         children: [
-                                          Container(
+                                          SizedBox(
                                             width: width - 80,
                                             height: 50,
                                             child: Text(
@@ -265,13 +265,13 @@ class _LabTestsState extends State<LabTests> {
                                       ),
                                       Row(
                                         children: [
-                                          Text(
+                                          const Text(
                                             'Appointment: ',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           _labTests[index]['date'] == null
-                                              ? Text(
+                                              ? const Text(
                                                   'N/A',
                                                   style: TextStyle(
                                                       fontWeight:
@@ -279,7 +279,7 @@ class _LabTestsState extends State<LabTests> {
                                                 )
                                               : Text(
                                                   _labTests[index]['date'],
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.w500),
                                                 ),
@@ -293,7 +293,7 @@ class _LabTestsState extends State<LabTests> {
                                             child: DropdownButton<String>(
                                               isDense: true,
                                               isExpanded: true,
-                                              icon: Icon(
+                                              icon: const Icon(
                                                 Icons.more_horiz,
                                               ),
                                               underline: Container(
@@ -407,7 +407,7 @@ class _LabTestsState extends State<LabTests> {
                         ),
                       ),
                     )
-                  : Center(
+                  : const Center(
                       child: Text('No lab tests found!'),
                     ),
             ),
@@ -435,7 +435,7 @@ class _LabTestsState extends State<LabTests> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: primaryColor,
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.only(
@@ -446,14 +446,14 @@ class _LabTestsState extends State<LabTests> {
                     height: 70,
                     width: double.infinity,
                     alignment: Alignment.center,
-                    child: Text('New Lab Test',
+                    child: const Text('New Lab Test',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 18,
                             color: colorWhite),
                         textAlign: TextAlign.center),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10.0,
                   ),
                   Padding(
@@ -519,7 +519,7 @@ class _LabTestsState extends State<LabTests> {
                               alignment: Alignment.center,
                               height: 30.0,
                               width: double.infinity,
-                              child: Text(
+                              child: const Text(
                                 'SAVE',
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.w500),
@@ -530,7 +530,7 @@ class _LabTestsState extends State<LabTests> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                 ],
@@ -542,7 +542,7 @@ class _LabTestsState extends State<LabTests> {
 
   // update lab test dialog
   Future<Future> _updateLabTestDialog(context, labTestId) async {
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -562,7 +562,7 @@ class _LabTestsState extends State<LabTests> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: primaryColor,
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.only(
@@ -573,14 +573,14 @@ class _LabTestsState extends State<LabTests> {
                     height: 70,
                     width: double.infinity,
                     alignment: Alignment.center,
-                    child: Text('Update Lab Test Details',
+                    child: const Text('Update Lab Test Details',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 18,
                             color: colorWhite),
                         textAlign: TextAlign.center),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10.0,
                   ),
                   Padding(
@@ -635,7 +635,7 @@ class _LabTestsState extends State<LabTests> {
                               alignment: Alignment.center,
                               height: 30.0,
                               width: double.infinity,
-                              child: Text(
+                              child: const Text(
                                 'SAVE',
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.w500),
@@ -646,7 +646,7 @@ class _LabTestsState extends State<LabTests> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                 ],
@@ -658,7 +658,7 @@ class _LabTestsState extends State<LabTests> {
 
   // view lab test details dialog
   Future<Future> _viewLabTestDialog(context, labTest) async {
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -678,7 +678,7 @@ class _LabTestsState extends State<LabTests> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: primaryColor,
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.only(
@@ -689,45 +689,43 @@ class _LabTestsState extends State<LabTests> {
                     height: 70,
                     width: double.infinity,
                     alignment: Alignment.center,
-                    child: Text('Lab Test Details',
+                    child: const Text('Lab Test Details',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 18,
                             color: colorWhite),
                         textAlign: TextAlign.center),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10.0,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Container(
+                    child: SizedBox(
                       height: 200,
                       child: SingleChildScrollView(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            const Text(
                               'Details:',
                               style: TextStyle(
                                   fontWeight: FontWeight.w500, fontSize: 16),
                             ),
                             Text(labTest['details']),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             Row(
                               children: [
-                                Text(
+                                const Text(
                                   'Date: ',
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 16),
                                 ),
-                                Text(labTest['date'] != null
-                                    ? labTest['date']
-                                    : 'N/A')
+                                Text(labTest['date'] ?? 'N/A')
                               ],
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                           ],
                         ),
                       ),
@@ -741,14 +739,14 @@ class _LabTestsState extends State<LabTests> {
                       alignment: Alignment.center,
                       height: 30.0,
                       width: double.infinity,
-                      child: Text(
+                      child: const Text(
                         'CLOSE',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                 ],

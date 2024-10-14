@@ -12,7 +12,7 @@ import 'package:http/http.dart' as http;
 class Appointments extends StatefulWidget {
   final String userId;
 
-  Appointments({required this.userId});
+  const Appointments({super.key, required this.userId});
 
   @override
   _AppointmentsState createState() => _AppointmentsState();
@@ -27,8 +27,8 @@ class _AppointmentsState extends State<Appointments> {
   var _selectedDocotor;
   String dropdownValue = 'Update';
 
-  TextEditingController _descriptionController = TextEditingController();
-  GlobalKey<FormState> _formKey = GlobalKey();
+  final TextEditingController _descriptionController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey();
 
   @override
   void initState() {
@@ -162,10 +162,10 @@ class _AppointmentsState extends State<Appointments> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: AppBar(
         backgroundColor: primaryColor,
-        title: Text('Appointments'),
+        title: const Text('Appointments'),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        label: Text('New Appointment'),
+        label: const Text('New Appointment'),
         onPressed: () {
           _addNewAppointmentDialog(context);
         },
@@ -174,10 +174,10 @@ class _AppointmentsState extends State<Appointments> {
         ),
       ),
       body: _loading
-          ? Center(child: CircularProgressIndicator())
-          : Container(
+          ? const Center(child: CircularProgressIndicator())
+          : SizedBox(
               height: height,
-              child: _appointments.length > 0
+              child: _appointments.isNotEmpty
                   ? SingleChildScrollView(
                       child: RefreshIndicator(
                         onRefresh: () async {
@@ -206,7 +206,7 @@ class _AppointmentsState extends State<Appointments> {
                                           color: Colors.grey.withOpacity(0.5),
                                           spreadRadius: 5,
                                           blurRadius: 7,
-                                          offset: Offset(0, 3)),
+                                          offset: const Offset(0, 3)),
                                     ],
                                   ),
                                   child: Column(
@@ -217,7 +217,7 @@ class _AppointmentsState extends State<Appointments> {
                                         children: [
                                           Text(
                                             _appointments[index]['full_name'],
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 18,
                                             ),
@@ -240,17 +240,17 @@ class _AppointmentsState extends State<Appointments> {
                                             child: Text(
                                               _appointments[index]
                                                   ['appointment_status'],
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   color: colorWhite,
                                                   fontWeight: FontWeight.w500),
                                             ),
                                           )
                                         ],
                                       ),
-                                      SizedBox(height: 5),
+                                      const SizedBox(height: 5),
                                       Row(
                                         children: [
-                                          Container(
+                                          SizedBox(
                                             width: width - 80,
                                             height: 50,
                                             child: Text(
@@ -264,7 +264,7 @@ class _AppointmentsState extends State<Appointments> {
                                       ),
                                       Row(
                                         children: [
-                                          Text(
+                                          const Text(
                                             'Appointment: ',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
@@ -274,7 +274,7 @@ class _AppointmentsState extends State<Appointments> {
                                                   _appointments[index]
                                                           ['time'] ==
                                                       null)
-                                              ? Text(
+                                              ? const Text(
                                                   'N/A',
                                                   style: TextStyle(
                                                       fontWeight:
@@ -282,7 +282,7 @@ class _AppointmentsState extends State<Appointments> {
                                                 )
                                               : Text(
                                                   '${_appointments[index]['date']}  ${_appointments[index]['time']}',
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.w500),
                                                 ),
@@ -296,7 +296,7 @@ class _AppointmentsState extends State<Appointments> {
                                             child: DropdownButton<String>(
                                               isDense: true,
                                               isExpanded: true,
-                                              icon: Icon(
+                                              icon: const Icon(
                                                 Icons.more_horiz,
                                               ),
                                               underline: Container(
@@ -414,7 +414,7 @@ class _AppointmentsState extends State<Appointments> {
                         ),
                       ),
                     )
-                  : Center(
+                  : const Center(
                       child: Text('No appointment data found!'),
                     ),
             ),
@@ -442,7 +442,7 @@ class _AppointmentsState extends State<Appointments> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: primaryColor,
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.only(
@@ -453,14 +453,14 @@ class _AppointmentsState extends State<Appointments> {
                     height: 70,
                     width: double.infinity,
                     alignment: Alignment.center,
-                    child: Text('New Appointment',
+                    child: const Text('New Appointment',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 18,
                             color: colorWhite),
                         textAlign: TextAlign.center),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10.0,
                   ),
                   Padding(
@@ -476,8 +476,8 @@ class _AppointmentsState extends State<Appointments> {
                               value: _selectedDocotor,
                               items: _doctors
                                   .map((value) => DropdownMenuItem(
-                                        child: Text(value["full_name"]),
                                         value: value,
+                                        child: Text(value["full_name"]),
                                       ))
                                   .toList(),
                               onChanged: (value) {
@@ -493,7 +493,7 @@ class _AppointmentsState extends State<Appointments> {
                               isDense: true,
                               iconSize: 30.0,
                               decoration: InputDecoration(
-                                prefixIcon: Icon(
+                                prefixIcon: const Icon(
                                   Icons.home,
                                   color: primaryColor,
                                 ),
@@ -503,32 +503,32 @@ class _AppointmentsState extends State<Appointments> {
                                     ? 'Select the Doctor'
                                     : 'Doctor',
                                 contentPadding:
-                                    EdgeInsets.fromLTRB(16, 10, 0, 10),
-                                hintStyle: TextStyle(color: hintColor),
+                                    const EdgeInsets.fromLTRB(16, 10, 0, 10),
+                                hintStyle: const TextStyle(color: hintColor),
                                 hintText: "Select the Doctor",
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                       color: primaryColor, width: 1.0),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                       color: primaryColor, width: 1.0),
                                 ),
                                 errorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: errorColor, width: 1),
+                                  borderSide: const BorderSide(
+                                      color: errorColor, width: 1),
                                 ),
                                 focusedErrorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: errorColor, width: 1),
+                                  borderSide: const BorderSide(
+                                      color: errorColor, width: 1),
                                 ),
-                                errorStyle: TextStyle(),
+                                errorStyle: const TextStyle(),
                               ),
-                              style: TextStyle(color: Colors.black),
+                              style: const TextStyle(color: Colors.black),
                             ),
                           ),
                           MyTextField(
@@ -577,7 +577,7 @@ class _AppointmentsState extends State<Appointments> {
                               alignment: Alignment.center,
                               height: 30.0,
                               width: double.infinity,
-                              child: Text(
+                              child: const Text(
                                 'SAVE',
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.w500),
@@ -588,7 +588,7 @@ class _AppointmentsState extends State<Appointments> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                 ],
@@ -600,7 +600,7 @@ class _AppointmentsState extends State<Appointments> {
 
   // update appointments dialog
   Future<Future> _updateAppointmentDialog(context, appointmentId) async {
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -620,7 +620,7 @@ class _AppointmentsState extends State<Appointments> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: primaryColor,
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.only(
@@ -631,14 +631,14 @@ class _AppointmentsState extends State<Appointments> {
                     height: 70,
                     width: double.infinity,
                     alignment: Alignment.center,
-                    child: Text('Update Appointment Details',
+                    child: const Text('Update Appointment Details',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 18,
                             color: colorWhite),
                         textAlign: TextAlign.center),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10.0,
                   ),
                   Padding(
@@ -693,7 +693,7 @@ class _AppointmentsState extends State<Appointments> {
                               alignment: Alignment.center,
                               height: 30.0,
                               width: double.infinity,
-                              child: Text(
+                              child: const Text(
                                 'SAVE',
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.w500),
@@ -704,7 +704,7 @@ class _AppointmentsState extends State<Appointments> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                 ],
@@ -716,7 +716,7 @@ class _AppointmentsState extends State<Appointments> {
 
   // view appointment details dialog
   Future<Future> _viewAppointmentDialog(context, appointment) async {
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -736,7 +736,7 @@ class _AppointmentsState extends State<Appointments> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: primaryColor,
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.only(
@@ -747,75 +747,69 @@ class _AppointmentsState extends State<Appointments> {
                     height: 70,
                     width: double.infinity,
                     alignment: Alignment.center,
-                    child: Text('Appointment Details',
+                    child: const Text('Appointment Details',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 18,
                             color: colorWhite),
                         textAlign: TextAlign.center),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10.0,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: Form(
                       key: _formKey,
-                      child: Container(
+                      child: SizedBox(
                         height: 200,
                         child: SingleChildScrollView(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              const Text(
                                 'Description:',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 16),
                               ),
                               Text(appointment['description']),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               Row(
                                 children: [
-                                  Text(
+                                  const Text(
                                     'Date: ',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 16),
                                   ),
-                                  Text(appointment['date'] != null
-                                      ? appointment['date']
-                                      : 'N/A')
+                                  Text(appointment['date'] ?? 'N/A')
                                 ],
                               ),
                               Row(
                                 children: [
-                                  Text(
+                                  const Text(
                                     'Time: ',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 16),
                                   ),
-                                  Text(appointment['time'] != null
-                                      ? appointment['time']
-                                      : 'N/A')
+                                  Text(appointment['time'] ?? 'N/A')
                                 ],
                               ),
-                              SizedBox(height: 8),
-                              Text(
+                              const SizedBox(height: 8),
+                              const Text(
                                 'Comments: ',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 16),
                               ),
-                              Text(appointment['comments'] != null
-                                  ? appointment['comments']
-                                  : 'N/A'),
+                              Text(appointment['comments'] ?? 'N/A'),
                             ],
                           ),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
@@ -824,14 +818,14 @@ class _AppointmentsState extends State<Appointments> {
                       alignment: Alignment.center,
                       height: 30.0,
                       width: double.infinity,
-                      child: Text(
+                      child: const Text(
                         'CLOSE',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                 ],

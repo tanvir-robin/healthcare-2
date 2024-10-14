@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:helth_management/constants/colors.dart';
 import 'package:helth_management/form/LabTestList.dart';
 import 'package:helth_management/form/appoinment.dart';
-import 'package:helth_management/screens/Appointments.dart';
-import 'package:helth_management/screens/History.dart';
-import 'package:helth_management/screens/LabReports.dart';
-import 'package:helth_management/screens/LabTests.dart';
-import 'package:helth_management/screens/Payable.dart';
-import 'package:helth_management/screens/Prescriptions.dart';
+
+import 'package:helth_management/screens/about_us.dart';
+import 'package:helth_management/screens/all_appointments.dart';
+import 'package:helth_management/screens/all_lab_test.dart';
+import 'package:helth_management/screens/all_trx.dart';
 
 class DashboardTiles extends StatefulWidget {
   final String username;
   final String userId;
-  const DashboardTiles({required this.username, required this.userId})
-      : super();
+  const DashboardTiles(
+      {super.key, required this.username, required this.userId});
 
   @override
   _DashboardTilesState createState() => _DashboardTilesState();
@@ -69,25 +68,27 @@ class _DashboardTilesState extends State<DashboardTiles> {
             ],
           ),
         ),
-        SizedBox(height: 25),
+        const SizedBox(height: 25),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: GridView(
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2),
               children: <Widget>[
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => Appoinmentform()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const AppointmentForm()));
                   },
-                  child: Card(
-                    margin: const EdgeInsets.all(10),
+                  child: const Card(
+                    margin: EdgeInsets.all(10),
                     color: cardColor,
                     elevation: 5.0,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -110,16 +111,48 @@ class _DashboardTilesState extends State<DashboardTiles> {
                       context,
                       MaterialPageRoute(
                         // builder: (_) => LabTests(userId: widget.userId),
-                        builder: (_) => HealthLabTestList(),
+                        builder: (_) => const AppointmentListPage(),
                       ),
                     );
                   },
-                  child: Card(
-                    margin: const EdgeInsets.all(10),
+                  child: const Card(
+                    margin: EdgeInsets.all(10),
                     color: cardColor,
                     elevation: 5.0,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Icon(Icons.view_agenda,
+                              size: 50, color: primaryColor),
+                          Text(
+                            'All Appointments',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        // builder: (_) => LabTests(userId: widget.userId),
+                        builder: (_) => const HealthLabTestList(),
+                      ),
+                    );
+                  },
+                  child: const Card(
+                    margin: EdgeInsets.all(10),
+                    color: cardColor,
+                    elevation: 5.0,
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -136,14 +169,99 @@ class _DashboardTilesState extends State<DashboardTiles> {
                     ),
                   ),
                 ),
+                // GestureDetector(
+                //   onTap: () {
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //         builder: (_) => Payable(userId: widget.userId),
+                //       ),
+                //     );
+                //   },
+                //   child: const Card(
+                //     margin: EdgeInsets.all(10),
+                //     color: cardColor,
+                //     elevation: 5.0,
+                //     child: Padding(
+                //       padding: EdgeInsets.all(8.0),
+                //       child: Column(
+                //         crossAxisAlignment: CrossAxisAlignment.center,
+                //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //         children: [
+                //           Icon(Icons.payment, size: 50, color: primaryColor),
+                //           Text(
+                //             'Payable',
+                //             style: TextStyle(
+                //                 fontSize: 16, fontWeight: FontWeight.w500),
+                //           )
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                // GestureDetector(
+                //   onTap: () {
+                //     Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //             builder: (_) =>
+                //                 Prescriptions(userId: widget.userId)));
+                //   },
+                //   child: const Card(
+                //     margin: EdgeInsets.all(10),
+                //     color: cardColor,
+                //     elevation: 5.0,
+                //     child: Padding(
+                //       padding: EdgeInsets.all(8.0),
+                //       child: Column(
+                //         crossAxisAlignment: CrossAxisAlignment.center,
+                //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //         children: [
+                //           Icon(Icons.medication, size: 50, color: primaryColor),
+                //           Text(
+                //             'Prescriptions',
+                //             style: TextStyle(
+                //                 fontSize: 16, fontWeight: FontWeight.w500),
+                //           )
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => Payable(userId: widget.userId),
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => LabTestAppointmentsList()));
+                  },
+                  child: const Card(
+                    margin: EdgeInsets.all(10),
+                    color: cardColor,
+                    elevation: 5.0,
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Icon(Icons.medication, size: 50, color: primaryColor),
+                          Text(
+                            'All Test',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          )
+                        ],
                       ),
-                    );
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => TransactionListPage()));
                   },
                   child: const Card(
                     margin: EdgeInsets.all(10),
@@ -157,7 +275,7 @@ class _DashboardTilesState extends State<DashboardTiles> {
                         children: [
                           Icon(Icons.payment, size: 50, color: primaryColor),
                           Text(
-                            'Payable',
+                            'Payment History',
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w500),
                           )
@@ -168,75 +286,15 @@ class _DashboardTilesState extends State<DashboardTiles> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) =>
-                                Prescriptions(userId: widget.userId)));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => AboutUsPage()));
                   },
-                  child: Card(
-                    margin: const EdgeInsets.all(10),
+                  child: const Card(
+                    margin: EdgeInsets.all(10),
                     color: cardColor,
                     elevation: 5.0,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Icon(Icons.medication, size: 50, color: primaryColor),
-                          Text(
-                            'Prescriptions',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => History(userId: widget.userId)));
-                  },
-                  child: Card(
-                    margin: const EdgeInsets.all(10),
-                    color: cardColor,
-                    elevation: 5.0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Icon(Icons.history_sharp,
-                              size: 50, color: primaryColor),
-                          Text(
-                            'History',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => LabReports(userId: widget.userId)));
-                  },
-                  child: Card(
-                    margin: const EdgeInsets.all(10),
-                    color: cardColor,
-                    elevation: 5.0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

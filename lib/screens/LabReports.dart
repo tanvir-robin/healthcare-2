@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 class LabReports extends StatefulWidget {
   final String userId;
 
-  LabReports({required this.userId});
+  const LabReports({super.key, required this.userId});
 
   @override
   _LabReportsState createState() => _LabReportsState();
@@ -68,13 +68,13 @@ class _LabReportsState extends State<LabReports> {
       backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: primaryColor,
-        title: Text('Lab Reports'),
+        title: const Text('Lab Reports'),
       ),
       body: _loading
-          ? Center(child: CircularProgressIndicator())
-          : Container(
+          ? const Center(child: CircularProgressIndicator())
+          : SizedBox(
               height: height,
-              child: _completedLabTests.length > 0
+              child: _completedLabTests.isNotEmpty
                   ? SingleChildScrollView(
                       child: RefreshIndicator(
                         onRefresh: () async {
@@ -103,7 +103,7 @@ class _LabReportsState extends State<LabReports> {
                                           color: Colors.grey.withOpacity(0.5),
                                           spreadRadius: 5,
                                           blurRadius: 7,
-                                          offset: Offset(0, 3)),
+                                          offset: const Offset(0, 3)),
                                     ],
                                   ),
                                   child: Column(
@@ -123,7 +123,7 @@ class _LabReportsState extends State<LabReports> {
                                                     text: _completedLabTests[
                                                             index]['test_id']
                                                         .toString(),
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                         fontWeight:
                                                             FontWeight.w500),
                                                   ),
@@ -153,17 +153,17 @@ class _LabReportsState extends State<LabReports> {
                                             child: Text(
                                               _completedLabTests[index]
                                                   ['test_status'],
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   color: colorWhite,
                                                   fontWeight: FontWeight.w500),
                                             ),
                                           )
                                         ],
                                       ),
-                                      SizedBox(height: 5),
+                                      const SizedBox(height: 5),
                                       Row(
                                         children: [
-                                          Container(
+                                          SizedBox(
                                             width: width - 80,
                                             height: 50,
                                             child: Text(
@@ -177,14 +177,14 @@ class _LabReportsState extends State<LabReports> {
                                       ),
                                       Row(
                                         children: [
-                                          Text(
+                                          const Text(
                                             'Appointment: ',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w500),
                                           ),
                                           _completedLabTests[index]['date'] ==
                                                   null
-                                              ? Text(
+                                              ? const Text(
                                                   'N/A',
                                                   style: TextStyle(
                                                       fontWeight:
@@ -193,7 +193,7 @@ class _LabReportsState extends State<LabReports> {
                                               : Text(
                                                   _completedLabTests[index]
                                                       ['date'],
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.w400),
                                                 ),
@@ -203,7 +203,7 @@ class _LabReportsState extends State<LabReports> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
+                                          const Text(
                                             'Lab Report',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w500),
@@ -220,7 +220,7 @@ class _LabReportsState extends State<LabReports> {
                                               //       ),
                                               //     ));
                                             },
-                                            child: Icon(
+                                            child: const Icon(
                                               Icons.remove_red_eye,
                                               color: primaryColor,
                                             ),
@@ -234,7 +234,7 @@ class _LabReportsState extends State<LabReports> {
                         ),
                       ),
                     )
-                  : Center(
+                  : const Center(
                       child: Text('No completed lab reports found!'),
                     ),
             ),
@@ -256,7 +256,7 @@ class _PdfViewPageState extends State<PdfViewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Lab Report'),
+          title: const Text('Lab Report'),
         ),
         body: const Center(
           child: Text('PDF View'),

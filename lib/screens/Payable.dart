@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 class Payable extends StatefulWidget {
   final String userId;
 
-  Payable({required this.userId});
+  const Payable({super.key, required this.userId});
 
   @override
   _PayableState createState() => _PayableState();
@@ -23,7 +23,7 @@ class _PayableState extends State<Payable> {
   late double height;
   String dropdownValue = 'Pay';
 
-  GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey<FormState> _formKey = GlobalKey();
 
   @override
   void initState() {
@@ -128,13 +128,13 @@ class _PayableState extends State<Payable> {
       backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: primaryColor,
-        title: Text('Payable Appointments'),
+        title: const Text('Payable Appointments'),
       ),
       body: _loading
-          ? Center(child: CircularProgressIndicator())
-          : Container(
+          ? const Center(child: CircularProgressIndicator())
+          : SizedBox(
               height: height,
-              child: _payableAppointments.length > 0
+              child: _payableAppointments.isNotEmpty
                   ? SingleChildScrollView(
                       child: RefreshIndicator(
                         onRefresh: () async {
@@ -163,7 +163,7 @@ class _PayableState extends State<Payable> {
                                           color: Colors.grey.withOpacity(0.5),
                                           spreadRadius: 5,
                                           blurRadius: 7,
-                                          offset: Offset(0, 3)),
+                                          offset: const Offset(0, 3)),
                                     ],
                                   ),
                                   child: Column(
@@ -175,7 +175,7 @@ class _PayableState extends State<Payable> {
                                           Text(
                                             _payableAppointments[index]
                                                 ['full_name'],
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 18,
                                             ),
@@ -213,17 +213,17 @@ class _PayableState extends State<Payable> {
                                             child: Text(
                                               _payableAppointments[index]
                                                   ['appointment_status'],
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   color: colorWhite,
                                                   fontWeight: FontWeight.w500),
                                             ),
                                           )
                                         ],
                                       ),
-                                      SizedBox(height: 5),
+                                      const SizedBox(height: 5),
                                       Row(
                                         children: [
-                                          Container(
+                                          SizedBox(
                                             width: width - 80,
                                             height: 50,
                                             child: Text(
@@ -237,7 +237,7 @@ class _PayableState extends State<Payable> {
                                       ),
                                       Row(
                                         children: [
-                                          Text(
+                                          const Text(
                                             'Appointment: ',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
@@ -248,7 +248,7 @@ class _PayableState extends State<Payable> {
                                                   _payableAppointments[index]
                                                           ['time'] ==
                                                       null)
-                                              ? Text(
+                                              ? const Text(
                                                   'N/A',
                                                   style: TextStyle(
                                                       fontWeight:
@@ -256,7 +256,7 @@ class _PayableState extends State<Payable> {
                                                 )
                                               : Text(
                                                   '${_payableAppointments[index]['date']}  ${_payableAppointments[index]['time']}',
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.w500),
                                                 ),
@@ -270,7 +270,7 @@ class _PayableState extends State<Payable> {
                                             child: DropdownButton<String>(
                                               isDense: true,
                                               isExpanded: true,
-                                              icon: Icon(
+                                              icon: const Icon(
                                                 Icons.more_horiz,
                                               ),
                                               underline: Container(
@@ -412,7 +412,7 @@ class _PayableState extends State<Payable> {
                         ),
                       ),
                     )
-                  : Center(
+                  : const Center(
                       child: Text('No payable appointments found!'),
                     ),
             ),
@@ -421,7 +421,7 @@ class _PayableState extends State<Payable> {
 
   // view appointment details dialog
   Future<Future> _viewAppointmentDialog(context, appointment) async {
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -441,7 +441,7 @@ class _PayableState extends State<Payable> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: primaryColor,
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.only(
@@ -452,75 +452,69 @@ class _PayableState extends State<Payable> {
                     height: 70,
                     width: double.infinity,
                     alignment: Alignment.center,
-                    child: Text('Appointment Details',
+                    child: const Text('Appointment Details',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 18,
                             color: colorWhite),
                         textAlign: TextAlign.center),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10.0,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: Form(
                       key: _formKey,
-                      child: Container(
+                      child: SizedBox(
                         height: 200,
                         child: SingleChildScrollView(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              const Text(
                                 'Description:',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 16),
                               ),
                               Text(appointment['description']),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               Row(
                                 children: [
-                                  Text(
+                                  const Text(
                                     'Date: ',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 16),
                                   ),
-                                  Text(appointment['date'] != null
-                                      ? appointment['date']
-                                      : 'N/A')
+                                  Text(appointment['date'] ?? 'N/A')
                                 ],
                               ),
                               Row(
                                 children: [
-                                  Text(
+                                  const Text(
                                     'Time: ',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 16),
                                   ),
-                                  Text(appointment['time'] != null
-                                      ? appointment['time']
-                                      : 'N/A')
+                                  Text(appointment['time'] ?? 'N/A')
                                 ],
                               ),
-                              SizedBox(height: 8),
-                              Text(
+                              const SizedBox(height: 8),
+                              const Text(
                                 'Comments: ',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 16),
                               ),
-                              Text(appointment['comments'] != null
-                                  ? appointment['comments']
-                                  : 'N/A'),
+                              Text(appointment['comments'] ?? 'N/A'),
                             ],
                           ),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
@@ -529,14 +523,14 @@ class _PayableState extends State<Payable> {
                       alignment: Alignment.center,
                       height: 30.0,
                       width: double.infinity,
-                      child: Text(
+                      child: const Text(
                         'CLOSE',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                 ],

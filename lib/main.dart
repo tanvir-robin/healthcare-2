@@ -1,29 +1,42 @@
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:helth_management/constants/images.dart';
+import 'package:helth_management/firebase_options.dart';
 import 'package:helth_management/screens/LoginPage.dart';
-import 'package:helth_management/widgets/DashboardTiles.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
+      builder: EasyLoading.init(),
       debugShowCheckedModeBanner: false,
       title: 'Health Management App',
       theme: ThemeData(
+        useMaterial3: false,
         primarySwatch: Colors.blue,
       ),
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -32,11 +45,11 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 3), () {
       // Navigate to the next screen after 3 seconds
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => LoginPage(),
+          builder: (context) => const LoginPage(),
           // builder: (context) => const DashboardTiles(
           //   username: 'E-CARE',
           //   userId: '1',
@@ -51,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: Colors.blue,
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage(bg),
             fit: BoxFit.cover,
@@ -61,9 +74,9 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              FlutterLogo(size: 100),
-              SizedBox(height: 20),
-              Text(
+              const FlutterLogo(size: 100),
+              const SizedBox(height: 20),
+              const Text(
                 'Welcome to ',
                 style: TextStyle(
                   color: Colors.white,
@@ -71,7 +84,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Text(
+              const Text(
                 'Hospital  Management App!',
                 style: TextStyle(
                   color: Color.fromARGB(255, 91, 57, 214),
@@ -79,7 +92,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -87,7 +100,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     phone,
                     height: 25,
                   ),
-                  Text(
+                  const Text(
                     '  123-456-7890',
                     style: TextStyle(
                       color: Colors.white,
@@ -97,7 +110,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                 ],
               ),
-              CircularProgressIndicator(
+              const CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
             ],
@@ -109,13 +122,15 @@ class _SplashScreenState extends State<SplashScreen> {
 }
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home Screen'),
+        title: const Text('Home Screen'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Welcome to Home Screen!'),
       ),
     );

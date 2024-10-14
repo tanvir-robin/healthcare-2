@@ -1,19 +1,20 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:helth_management/constants/colors.dart';
 import 'package:helth_management/constants/images.dart';
 import 'package:helth_management/screens/LoginPage.dart';
-import 'package:helth_management/services/NetworkHelper.dart';
+import 'package:helth_management/screens/otp_screen.dart';
+
 import 'package:helth_management/widgets/MyButton.dart';
 import 'package:helth_management/widgets/MyTextField.dart';
-
-import 'package:http/http.dart' as http;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUp extends StatefulWidget {
+  const SignUp({super.key});
+
   @override
   _SignUpState createState() => _SignUpState();
 }
@@ -21,16 +22,18 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   late double width;
   late double height;
-  bool visible = false;
-  bool _loading = false;
+  final bool _loading = false;
 
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _contactController = TextEditingController();
-  TextEditingController _addressController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _contactController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   void dispose() {
@@ -43,33 +46,57 @@ class _SignUpState extends State<SignUp> {
     super.dispose();
   }
 
-  Future<http.Response> _register() async {
-    setState(() {
-      _loading = true;
-    });
+  // Function to register the user
+  Future<void> _register() async {
+    // setState(() {
+    //   _loading = true;
+    // });
+    EasyLoading.show(status: 'Creating Account...');
 
-    final http.Response response = await Network().postData({
-      'full_name': _nameController.text,
-      'username': _usernameController.text,
-      'email': _emailController.text,
-      'contact': _contactController.text,
-      'address': _addressController.text,
-      'password': _passwordController.text
-    }, '/registerUser.php');
+    try {
+      // Sign up user with email and password
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+      User? user = userCredential.user;
 
-    print(jsonDecode(response.body));
+      if (user != null) {
+        // Save additional user data to Firestore
+        await _firestore.collection('users').doc(user.uid).set({
+          'full_name': _nameController.text,
+          'username': _usernameController.text,
+          'email': _emailController.text,
+          'contact': _contactController.text,
+          'address': _addressController.text,
+        });
 
-    setState(() {
-      _loading = false;
-    });
-
-    return response;
+        // Navigate to OTP verification screen with user email
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) =>
+                VerificationScreen(email: _emailController.text),
+          ),
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      Fluttertoast.showToast(
+        msg: e.message ?? 'Error occurred during sign up',
+        backgroundColor: Colors.red[600],
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_LONG,
+      );
+    } finally {
+      EasyLoading.dismiss();
+    }
   }
 
   String? validateEmail(String value) {
     String pattern =
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
-    RegExp regExp = new RegExp(pattern);
+    RegExp regExp = RegExp(pattern);
 
     if (value.isEmpty) {
       return 'Email address is required';
@@ -81,9 +108,9 @@ class _SignUpState extends State<SignUp> {
 
   String? validateMobile(String value) {
     String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-    RegExp regExp = new RegExp(pattern);
+    RegExp regExp = RegExp(pattern);
 
-    if (value.length == 0) {
+    if (value.isEmpty) {
       return 'Mobile number is required';
     } else if (!regExp.hasMatch(value)) {
       return 'Please enter a valid mobile number';
@@ -100,7 +127,7 @@ class _SignUpState extends State<SignUp> {
       child: Scaffold(
         backgroundColor: backgroundColor,
         body: _loading
-            ? Center(child: CircularProgressIndicator())
+            ? const Center(child: CircularProgressIndicator())
             : Center(
                 child: SingleChildScrollView(
                   child: Container(
@@ -110,7 +137,7 @@ class _SignUpState extends State<SignUp> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
+                          const Text(
                             'REGISTER',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 28),
@@ -119,9 +146,9 @@ class _SignUpState extends State<SignUp> {
                             signup_image,
                             height: width * 0.50,
                           ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
 
-                          // full name
+                          // Full name
                           MyTextField(
                             controller: _nameController,
                             hint: "Name",
@@ -134,7 +161,7 @@ class _SignUpState extends State<SignUp> {
                             },
                           ),
 
-                          // username
+                          // Username
                           MyTextField(
                             controller: _usernameController,
                             hint: "Username",
@@ -147,7 +174,7 @@ class _SignUpState extends State<SignUp> {
                             },
                           ),
 
-                          // email
+                          // Email
                           MyTextField(
                             controller: _emailController,
                             hint: "Email",
@@ -158,7 +185,7 @@ class _SignUpState extends State<SignUp> {
                             },
                           ),
 
-                          // contact
+                          // Contact
                           MyTextField(
                             controller: _contactController,
                             hint: "Contact",
@@ -170,7 +197,7 @@ class _SignUpState extends State<SignUp> {
                             },
                           ),
 
-                          // address
+                          // Address
                           MyTextField(
                             controller: _addressController,
                             hint: "Address",
@@ -185,7 +212,7 @@ class _SignUpState extends State<SignUp> {
                             },
                           ),
 
-                          // password
+                          // Password
                           MyTextField(
                             controller: _passwordController,
                             hint: "Password",
@@ -200,51 +227,30 @@ class _SignUpState extends State<SignUp> {
                             },
                           ),
 
-                          // login button
+                          // Sign Up Button
                           GestureDetector(
                             onTap: () {
                               if (_formKey.currentState!.validate()) {
-                                _register().then((value) {
-                                  var res = jsonDecode(value.body);
-
-                                  if (res['error'] == true) {
-                                    Fluttertoast.showToast(
-                                        msg: res['message'],
-                                        backgroundColor: Colors.red[600],
-                                        textColor: Colors.white,
-                                        toastLength: Toast.LENGTH_LONG);
-                                  } else if (res['error'] == false) {
-                                    Fluttertoast.showToast(
-                                        msg: res['message'],
-                                        backgroundColor: Colors.green,
-                                        textColor: Colors.white,
-                                        toastLength: Toast.LENGTH_LONG);
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                LoginPage()));
-                                  }
-                                });
+                                _register();
                               }
                             },
-                            child: MyButton(
+                            child: const MyButton(
                               text: 'SIGNUP',
                               btnColor: primaryColor,
                               btnRadius: 8,
                             ),
                           ),
 
-                          // link to sign up page
+                          // Link to Login page
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
+                              const Text(
                                 'Already have an account?',
                                 style: TextStyle(
                                     color: primaryColor, fontSize: 16),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 5,
                               ),
                               GestureDetector(
@@ -252,9 +258,9 @@ class _SignUpState extends State<SignUp> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (_) => LoginPage()));
+                                          builder: (_) => const LoginPage()));
                                 },
-                                child: Text(
+                                child: const Text(
                                   'Log in',
                                   style: TextStyle(
                                       color: primaryColor,

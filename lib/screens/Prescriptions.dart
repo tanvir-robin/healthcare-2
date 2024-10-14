@@ -9,7 +9,7 @@ import 'package:helth_management/services/NetworkHelper.dart';
 class Prescriptions extends StatefulWidget {
   final String userId;
 
-  Prescriptions({required this.userId});
+  const Prescriptions({super.key, required this.userId});
 
   @override
   _PrescriptionsState createState() => _PrescriptionsState();
@@ -87,13 +87,13 @@ class _PrescriptionsState extends State<Prescriptions> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: AppBar(
         backgroundColor: primaryColor,
-        title: Text('Prescriptions'),
+        title: const Text('Prescriptions'),
       ),
       body: _loading
-          ? Center(child: CircularProgressIndicator())
-          : Container(
+          ? const Center(child: CircularProgressIndicator())
+          : SizedBox(
               height: height,
-              child: _prescriptions.length > 0
+              child: _prescriptions.isNotEmpty
                   ? SingleChildScrollView(
                       child: RefreshIndicator(
                         onRefresh: () async {
@@ -122,7 +122,7 @@ class _PrescriptionsState extends State<Prescriptions> {
                                           color: Colors.grey.withOpacity(0.5),
                                           spreadRadius: 5,
                                           blurRadius: 7,
-                                          offset: Offset(0, 3)),
+                                          offset: const Offset(0, 3)),
                                     ],
                                   ),
                                   child: Column(
@@ -144,7 +144,7 @@ class _PrescriptionsState extends State<Prescriptions> {
                                                     text: _prescriptions[index]
                                                             ['prescription_id']
                                                         .toString(),
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                         fontWeight:
                                                             FontWeight.w500),
                                                   ),
@@ -172,21 +172,21 @@ class _PrescriptionsState extends State<Prescriptions> {
                                             child: Text(
                                               _prescriptions[index]
                                                   ['prescription_status'],
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   color: colorWhite,
                                                   fontWeight: FontWeight.w500),
                                             ),
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 5),
-                                      Text(
+                                      const SizedBox(height: 5),
+                                      const Text(
                                         'Prescription:',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 15),
                                       ),
-                                      Container(
+                                      SizedBox(
                                         width: width - 80,
                                         height: 55,
                                         child: Text(
@@ -197,14 +197,14 @@ class _PrescriptionsState extends State<Prescriptions> {
                                           textAlign: TextAlign.justify,
                                         ),
                                       ),
-                                      SizedBox(height: 5),
-                                      Text(
+                                      const SizedBox(height: 5),
+                                      const Text(
                                         'Location:',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 15),
                                       ),
-                                      Container(
+                                      SizedBox(
                                         width: width - 80,
                                         height: 40,
                                         child: Text(
@@ -223,7 +223,8 @@ class _PrescriptionsState extends State<Prescriptions> {
                                             child: DropdownButton<String>(
                                               isDense: true,
                                               isExpanded: true,
-                                              icon: Icon(Icons.more_horiz),
+                                              icon:
+                                                  const Icon(Icons.more_horiz),
                                               underline: Container(
                                                 height: 0,
                                                 color: Colors.deepPurpleAccent,
@@ -292,7 +293,7 @@ class _PrescriptionsState extends State<Prescriptions> {
                         ),
                       ),
                     )
-                  : Center(
+                  : const Center(
                       child: Text('No prescriptions found!'),
                     ),
             ),

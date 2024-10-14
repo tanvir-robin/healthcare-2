@@ -1,19 +1,22 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:helth_management/constants/colors.dart';
 import 'package:helth_management/constants/images.dart';
 import 'package:helth_management/screens/Dashboard.dart';
 import 'package:helth_management/screens/SignUp.dart';
-import 'package:helth_management/services/NetworkHelper.dart';
 import 'package:helth_management/widgets/MyButton.dart';
 import 'package:helth_management/widgets/MyTextField.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:http/http.dart' as http;
+
+// Global variable to store user data
+Map<String, dynamic>? globalUserData;
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -21,12 +24,11 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   late double width;
   late double height;
-  bool visible = false;
   bool _loading = false;
 
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -35,23 +37,56 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  Future<http.Response> _login() async {
+  // Firebase login function
+  Future<void> _login() async {
     setState(() {
       _loading = true;
     });
+    try {
+      // Sign in with FirebaseAuth
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: _usernameController.text,
+              password: _passwordController.text);
 
-    final http.Response response = await Network().postData({
-      'username': _usernameController.text,
-      'password': _passwordController.text
-    }, '/userLogin.php');
+      // Fetch user data from Firestore
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user?.uid)
+          .get();
 
-    print(jsonDecode(response.body));
+      // Store user data in global variable
+      globalUserData = userDoc.data() as Map<String, dynamic>;
 
-    setState(() {
-      _loading = false;
-    });
+      // Show success toast
+      Fluttertoast.showToast(
+        msg: "Login Successful!",
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
 
-    return response;
+      // Navigate to Dashboard with user details
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => Dashboard(
+            name: globalUserData?['full_name'] ?? 'User',
+            userId: userCredential.user!.uid,
+          ),
+        ),
+      );
+    } on FirebaseAuthException catch (e) {
+      // Show error toast
+      Fluttertoast.showToast(
+        msg: e.message ?? "Login failed",
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 
   @override
@@ -63,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Scaffold(
         backgroundColor: backgroundColor,
         body: _loading
-            ? Center(child: CircularProgressIndicator())
+            ? const Center(child: CircularProgressIndicator())
             : Center(
                 child: SingleChildScrollView(
                   child: Padding(
@@ -73,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
+                          const Text(
                             'LOGIN',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 28),
@@ -82,12 +117,12 @@ class _LoginPageState extends State<LoginPage> {
                             login_image,
                             height: height * 0.35,
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
 
-                          // username
+                          // Username TextField
                           MyTextField(
                             controller: _usernameController,
-                            hint: "Username",
+                            hint: "Email",
                             icon: Icons.person,
                             validation: (val) {
                               if (val.isEmpty) {
@@ -97,10 +132,10 @@ class _LoginPageState extends State<LoginPage> {
                             },
                           ),
 
-                          // password
+                          // Password TextField
                           MyTextField(
                             controller: _passwordController,
-                            hint: "Passwor",
+                            hint: "Password",
                             isPassword: true,
                             isSecure: true,
                             icon: Icons.lock,
@@ -112,69 +147,41 @@ class _LoginPageState extends State<LoginPage> {
                             },
                           ),
 
-                          // login button
+                          // Login Button
                           GestureDetector(
                             onTap: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      Dashboard(name: 'E-CARE', userId: '1'),
-                                ),
-                              );
-                              // if (_formKey.currentState!.validate()) {
-                              //   _login().then((value) {
-                              //     var res = jsonDecode(value.body);
-
-                              //     if (res['error'] == true) {
-                              //       Fluttertoast.showToast(
-                              //           msg: res['message'],
-                              //           backgroundColor: Colors.red[600],
-                              //           textColor: Colors.white,
-                              //           toastLength: Toast.LENGTH_LONG);
-                              //     } else {
-                              //       Navigator.pushReplacement(
-                              //         context,
-                              //         MaterialPageRoute(
-                              //           builder: (BuildContext context) =>
-                              //               Dashboard(
-                              //                   name: res['full_name'],
-                              //                   userId:
-                              //                       res['user_id'].toString()),
-                              //         ),
-                              //       );
-                              //     }
-                              //   });
-                              // }
+                              if (_formKey.currentState!.validate()) {
+                                _login();
+                              }
                             },
-                            child: MyButton(
+                            child: const MyButton(
                               text: 'LOGIN',
                               btnColor: primaryColor,
                               btnRadius: 8,
                             ),
                           ),
 
-                          // link to sign up page
+                          // Link to Sign Up
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
+                              const Text(
                                 'Don\'t have an account?',
                                 style: TextStyle(
                                     color: primaryColor, fontSize: 16),
                               ),
-                              SizedBox(
-                                width: 5,
-                              ),
+                              const SizedBox(width: 5),
                               GestureDetector(
                                 onTap: () {
                                   Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              SignUp()));
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          const SignUp(),
+                                    ),
+                                  );
                                 },
-                                child: Text(
+                                child: const Text(
                                   'Sign up',
                                   style: TextStyle(
                                       color: primaryColor,
@@ -183,7 +190,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),

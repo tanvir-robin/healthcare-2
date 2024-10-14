@@ -17,7 +17,8 @@ class MyTextField extends StatefulWidget {
   var onChanged;
 
   MyTextField(
-      {this.isPassword = false,
+      {super.key,
+      this.isPassword = false,
       this.isEmail = false,
       this.isNumber = false,
       this.isMultiline = false,
@@ -65,7 +66,7 @@ class _MyTextFieldState extends State<MyTextField> {
                       widget.isPassword = !widget.isPassword;
                     });
                   },
-                  child: new Icon(
+                  child: Icon(
                     widget.isPassword ? Icons.visibility_off : Icons.visibility,
                     color: primaryColor,
                   ),
@@ -77,24 +78,24 @@ class _MyTextFieldState extends State<MyTextField> {
                   color: primaryColor,
                 )
               : null,
-          contentPadding: EdgeInsets.fromLTRB(16, 10, 16, 10),
+          contentPadding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
           hintText: widget.hint,
-          hintStyle: TextStyle(color: hintColor),
+          hintStyle: const TextStyle(color: hintColor),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: primaryColor, width: 1.0),
+            borderSide: const BorderSide(color: primaryColor, width: 1.0),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: primaryColor, width: 1.0),
+            borderSide: const BorderSide(color: primaryColor, width: 1.0),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: errorColor, width: 1),
+            borderSide: const BorderSide(color: errorColor, width: 1),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: errorColor, width: 1),
+            borderSide: const BorderSide(color: errorColor, width: 1),
           ),
         ),
       ),

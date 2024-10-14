@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "908493296650",
+    "project_id": "helthcare-2",
+    "storage_bucket": "helthcare-2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:908493296650:android:9185be77d8e17f30267bf3",
+        "android_client_info": {
+          "package_name": "com.example.helth_management"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3ObTl_o4ryZ5XmlneGf5MPt3qVFK2hao"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
