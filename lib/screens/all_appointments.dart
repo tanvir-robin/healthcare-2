@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:http/http.dart' as http;
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:helth_management/screens/payment/paymnent_screen.dart';
 
@@ -91,6 +97,20 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
                             ),
                         ],
                       ),
+                      const SizedBox(height: 10),
+                      if (appointment.containsKey('report_pdf'))
+                        ElevatedButton(
+                          onPressed: () {
+                            _viewPrescription(appointment['report_pdf']);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                          ),
+                          child: const Text(
+                            'View Prescription',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -113,5 +133,41 @@ class _AppointmentListPageState extends State<AppointmentListPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _viewPrescription(String pdfUrl) async {
+    try {
+      // Show loading indicator
+      EasyLoading.show(status: 'Getting your pescription...');
+
+      // Download the PDF file using the http package
+      var response = await http.get(Uri.parse(pdfUrl));
+
+      if (response.statusCode == 200) {
+        // Get the application's documents directory
+        var dir = await getApplicationDocumentsDirectory();
+        String savePath = '${dir.path}/prescription.pdf';
+
+        // Save the file
+        File file = File(savePath);
+        await file.writeAsBytes(response.bodyBytes);
+
+        // Open the downloaded PDF file
+        await OpenFile.open(savePath);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+                  'Error downloading prescription: ${response.statusCode}')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error opening prescription: $e')),
+      );
+    } finally {
+      // Hide loading indicator
+      EasyLoading.dismiss();
+    }
   }
 }
