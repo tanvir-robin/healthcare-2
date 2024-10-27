@@ -144,7 +144,7 @@ class _LabTestAppointmentState extends State<LabTestAppointment> {
       controller: _appointmentDateTimeController,
       readOnly: true,
       decoration: InputDecoration(
-        labelText: 'Appointment Date & Time',
+        labelText: 'Sample Giving Schedule',
         border: OutlineInputBorder(),
         suffixIcon: IconButton(
           icon: const Icon(Icons.calendar_today),

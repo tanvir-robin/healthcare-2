@@ -35,6 +35,7 @@ class PaymentSuccessScreen extends StatelessWidget {
             Center(
               child: Text(
                 'Your payment has been succesfully processed.',
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

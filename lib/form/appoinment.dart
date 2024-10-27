@@ -1,8 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:helth_management/constants/email_service.dart';
 import 'package:intl/intl.dart';
+import 'package:helth_management/constants/available_doctors.dart';
 
 class AppointmentForm extends StatefulWidget {
   const AppointmentForm({super.key});
@@ -18,7 +18,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
 
-  String? _selectedDoctor;
+  AvailableDoctor? _selectedDoctor;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -43,14 +43,13 @@ class _AppointmentFormState extends State<AppointmentForm> {
 
   Future<void> _submitAppointment() async {
     if (_formKey.currentState!.validate()) {
-      // Adding payment_status and amount to the appointment data
       final appointmentData = {
         'name': _nameController.text,
         'email': _emailController.text,
         'phone': _phoneController.text,
-        'doctor': _selectedDoctor,
+        'doctor': _selectedDoctor?.name,
         'appointmentDate': _dateController.text,
-        'payment_status': 'unpaid', // Default value
+        'payment_status': 'unpaid',
         'amount': 1000,
         'patient_id': FirebaseAuth.instance.currentUser!.uid,
         'created_at': FieldValue.serverTimestamp(),
@@ -59,10 +58,6 @@ class _AppointmentFormState extends State<AppointmentForm> {
       await FirebaseFirestore.instance
           .collection('appointments')
           .add(appointmentData);
-
-      await EmailService().sendAppointmentConfirmationEmail(
-        FirebaseAuth.instance.currentUser!.email!,
-      );
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Appointment booked successfully!')),
@@ -138,9 +133,9 @@ class _AppointmentFormState extends State<AppointmentForm> {
                 ),
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
+              DropdownButtonFormField<AvailableDoctor>(
                 value: _selectedDoctor,
-                onChanged: (String? newValue) {
+                onChanged: (AvailableDoctor? newValue) {
                   setState(() {
                     _selectedDoctor = newValue;
                   });
@@ -155,15 +150,21 @@ class _AppointmentFormState extends State<AppointmentForm> {
                   ),
                   border: OutlineInputBorder(),
                 ),
-                items: <String>[
-                  'Dr. Mohammad Zakir Hossain',
-                  'Dr. Mahbubul Alam',
-                  'Dr. Rubaiyat Haque',
-                  'Dr. Tahmina Alam',
-                ].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
+                items: demoAvailableDoctors
+                    .map<DropdownMenuItem<AvailableDoctor>>(
+                        (AvailableDoctor doctor) {
+                  return DropdownMenuItem<AvailableDoctor>(
+                    value: doctor,
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundImage: AssetImage(doctor.image),
+                          radius: 16,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(doctor.name),
+                      ],
+                    ),
                   );
                 }).toList(),
               ),
@@ -199,10 +200,11 @@ class _AppointmentFormState extends State<AppointmentForm> {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: const Center(
-                    child: Text(
-                  'Submit Appointment',
-                  style: TextStyle(color: Colors.white),
-                )),
+                  child: Text(
+                    'Submit Appointment',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
               ),
             ],
           ),

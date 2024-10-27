@@ -101,7 +101,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     height: 25,
                   ),
                   const Text(
-                    '  123-456-7890',
+                    '  01789486881',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,

@@ -1,12 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:helth_management/constants/colors.dart';
 import 'package:helth_management/form/LabTestList.dart';
 import 'package:helth_management/form/appoinment.dart';
+import 'package:helth_management/screens/LoginPage.dart';
 
 import 'package:helth_management/screens/about_us.dart';
 import 'package:helth_management/screens/all_appointments.dart';
 import 'package:helth_management/screens/all_lab_test.dart';
 import 'package:helth_management/screens/all_trx.dart';
+import 'package:helth_management/screens/view_available_doctors.dart';
 
 class DashboardTiles extends StatefulWidget {
   final String username;
@@ -32,7 +35,7 @@ class _DashboardTilesState extends State<DashboardTiles> {
               gradient: const LinearGradient(
                   colors: [
                     Colors.purple,
-                    Colors.pinkAccent,
+                    Color.fromARGB(255, 24, 5, 111),
                   ],
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
@@ -169,36 +172,37 @@ class _DashboardTilesState extends State<DashboardTiles> {
                     ),
                   ),
                 ),
-                // GestureDetector(
-                //   onTap: () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //         builder: (_) => Payable(userId: widget.userId),
-                //       ),
-                //     );
-                //   },
-                //   child: const Card(
-                //     margin: EdgeInsets.all(10),
-                //     color: cardColor,
-                //     elevation: 5.0,
-                //     child: Padding(
-                //       padding: EdgeInsets.all(8.0),
-                //       child: Column(
-                //         crossAxisAlignment: CrossAxisAlignment.center,
-                //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //         children: [
-                //           Icon(Icons.payment, size: 50, color: primaryColor),
-                //           Text(
-                //             'Payable',
-                //             style: TextStyle(
-                //                 fontSize: 16, fontWeight: FontWeight.w500),
-                //           )
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => AllAvailableDoctorsScreen(),
+                      ),
+                    );
+                  },
+                  child: const Card(
+                    margin: EdgeInsets.all(10),
+                    color: cardColor,
+                    elevation: 5.0,
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Icon(Icons.all_inbox_outlined,
+                              size: 50, color: primaryColor),
+                          Text(
+                            'All Doctors',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
                 // GestureDetector(
                 //   onTap: () {
                 //     Navigator.push(
@@ -303,6 +307,33 @@ class _DashboardTilesState extends State<DashboardTiles> {
                               size: 50, color: primaryColor),
                           Text(
                             'About Us',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    await FirebaseAuth.instance.signOut();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => LoginPage()));
+                  },
+                  child: const Card(
+                    margin: EdgeInsets.all(10),
+                    color: cardColor,
+                    elevation: 5.0,
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Icon(Icons.logout, size: 50, color: primaryColor),
+                          Text(
+                            'Logout',
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w500),
                           )

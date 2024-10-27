@@ -7,6 +7,8 @@ import 'package:helth_management/constants/colors.dart';
 import 'package:helth_management/constants/images.dart';
 import 'package:helth_management/screens/Dashboard.dart';
 import 'package:helth_management/screens/SignUp.dart';
+
+import 'package:helth_management/screens/forget_password.dart';
 import 'package:helth_management/widgets/MyButton.dart';
 import 'package:helth_management/widgets/MyTextField.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -158,6 +160,27 @@ class _LoginPageState extends State<LoginPage> {
                               text: 'LOGIN',
                               btnColor: primaryColor,
                               btnRadius: 8,
+                            ),
+                          ),
+
+                          const SizedBox(height: 20), // Add some space
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      const ForgotPasswordScreen(),
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              'Forgot Password?',
+                              style: TextStyle(
+                                color: primaryColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
 
